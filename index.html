@@ -60,41 +60,23 @@
 
     <script>
     function confirmExit() {
-        if (confirm("本当にこの世界からログアウトしますか？")) {
-            alert("また、どこかの電脳で。");
-        }
+    if (confirm("本当にこの世界からログアウトしますか？")) {
+        alert("また、どこかの電脳で。");
     }
-
-      // 初期化処理：6件目以降を .hidden にする
-      document.addEventListener("DOMContentLoaded", function () {
-        const listItems = document.querySelectorAll('.entry-list li');
-        listItems.forEach((li, index) => {
-          if (index >= 3) {
-            li.classList.add('hidden');
-          }
-        });
-      });
-    
-      // LOGSボタンで全部表示
-        function showAllEntries() {
-          const hiddenItems = document.querySelectorAll('.entry-list .hidden');
-          hiddenItems.forEach(el => {
-            el.classList.remove('hidden'); // まず非表示クラスを外す
-            // すこし後でshowを追加（次の描画フレームで）
-            requestAnimationFrame(() => {
-              el.classList.add('show');
-            });
-          });
-        
-          // LOGSボタンを非表示
-          event.target.style.display = 'none';
-        }
+}
 
     document.addEventListener("DOMContentLoaded", function () {
       const today = new Date();
     
-      // 日付文字列が入っている要素を全部探す
-      document.querySelectorAll('.entry-list li').forEach(li => {
+      const listItems = document.querySelectorAll('.entry-list li');
+    
+      listItems.forEach((li, index) => {
+        // ▼ ① 最初は3件だけ表示、それ以降は .hidden
+        if (index >= 3) {
+          li.classList.add('hidden');
+        }
+    
+        // ▼ ② .meta から日付を読み取って age-x / recent を付加
         const meta = li.querySelector('.meta');
         if (!meta) return;
     
@@ -103,26 +85,41 @@
     
         const dateStr = match[0];
         const year = parseInt(dateStr.slice(0, 4));
-        const month = parseInt(dateStr.slice(4, 6)) - 1; // JSの月は0から始まる
+        const month = parseInt(dateStr.slice(4, 6)) - 1;
         const day = parseInt(dateStr.slice(6, 8));
         const postDate = new Date(year, month, day);
     
-        const diffDays = (today - postDate) / (1000 * 60 * 60 * 24);
+        const diffDays = Math.floor((today - postDate) / (1000 * 60 * 60 * 24));
         if (diffDays <= 2) {
-          li.classList.add('recent'); // 2日以内ならrecentクラス追加
+          li.classList.add('recent');
         }
+    
+        const capped = Math.min(diffDays, 7);
+        li.classList.add(`age-${capped}`);
       });
-    });
-
-          // タイトル（.neon）のアニメーションをバラつかせる
+    
+      // ▼ ③ タイトル (.neon) にランダムなアニメーションディレイを付与
       const titles = document.querySelectorAll('.entry-list .neon');
       titles.forEach(title => {
-        const delay = Math.random() * 2; // 0〜2秒のランダムディレイ
+        const delay = Math.random() * 2;
         title.style.animationDelay = `${delay}s`;
       });
     });
-        
-    </script>
+    
+    // ▼ ④ LOGSボタン押下時に隠れた記事を表示（.showでアニメ付き）
+    function showAllEntries() {
+      const hiddenItems = document.querySelectorAll('.entry-list .hidden');
+      hiddenItems.forEach(el => {
+        el.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          el.classList.add('show');
+        });
+      });
+    
+      event.target.style.display = 'none';
+    }
+    </script>    
+
             
 </body>
 </html>
