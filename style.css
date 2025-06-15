@@ -219,23 +219,26 @@ a.neon {
 
 @media screen and (max-width: 600px) {
   .entry-list li {
-    flex-direction: row;        /* ← 縦並びではなく横並びのまま */
-    flex-wrap: wrap;            /* ← 必須：折り返し可能に */
+    display: flex;
+    flex-direction: column;   /* ← 縦に並べる */
     align-items: flex-start;
+    padding: 0.25em 0;
   }
 
   .entry-list .title {
-    flex: 1 1 75%;
-    white-space: normal;        /* ← 折り返しOKに */
-    overflow: visible;
-    text-overflow: unset;
-    padding-right: 0.5em;
+    width: 100%;              /* ← 横幅いっぱい */
+    white-space: nowrap;      /* ← 折り返し防止 */
+    overflow: hidden;
+    text-overflow: ellipsis;  /* ← 長すぎると省略記号 */
+    font-size: 1rem;
   }
 
   .entry-list .meta {
-    flex-shrink: 0;
+    margin-top: 0.2em;
+    font-size: 0.75rem;
+    color: #aaa;
     white-space: nowrap;
-    margin-top: 0.25em;
+    text-align: right;
   }
 }
 
