@@ -6,13 +6,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+    
 <body>
-    <div class="container">
-        <article>
-            <h2 class="neon">＞＞ JOURNAL ENTRY #03</h2>
-            <p>夜の街にネオンが灯る頃、過去の記憶がまた蘇る。</p>
-            <p><a href="index.html">← 戻る</a></p>
-        </article>
-    </div>
+  <div class="container">
+    <article>
+      <h2 class="neon">＞＞ JOURNAL ENTRY #03</h2>
+      <p class="meta">20250615_20250616</p>
+
+      <!-- ✦ ここにボタンを追加 ✦ -->
+      <nav class="inline-nav">
+        <a href="index.html">START</a>
+        <a href="logs.html">LOGS</a>
+        <a href="glitch.html" onclick="confirmExit()">EXIT</a>
+      </nav>
+
+      <p>今日もまた、ネオンの滲む夜の路地を歩く。記憶と電子が交錯するサイバーレトロの夢。</p>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+  </script>
 </body>
+    
 </html>
