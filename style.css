@@ -91,6 +91,10 @@ nav a:hover {
     white-space: nowrap;    /* ← 改行防止（任意） */
 }
 
+.hidden {
+  display: none;
+}
+
 .entry-list {
     margin-top: 5em;
 }
