@@ -83,5 +83,8 @@ nav a:hover {
     font-size: 0.75em;
     color: #aaa;
     margin-bottom: 1em;
+    text-align: right;      /* ← 追加 */
+    white-space: nowrap;    /* ← 改行防止（任意） */
 }
+
 
