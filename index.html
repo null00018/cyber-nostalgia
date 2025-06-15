@@ -105,7 +105,7 @@
         const match = meta.textContent.match(/\d{8}/);
         if (!match) return;
     
-        const dateStr = match[1];
+        const dateStr = match[0];
         const year = parseInt(dateStr.slice(0, 4));
         const month = parseInt(dateStr.slice(4, 6)) - 1; // JSの月は0から始まる
         const day = parseInt(dateStr.slice(6, 8));
