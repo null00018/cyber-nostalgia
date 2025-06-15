@@ -74,6 +74,14 @@ nav a:hover {
     animation: flicker 1.5s infinite;
 }
 
+.recent a.neon {
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 5px var(--neon-pink),
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink);
+}
+
 @keyframes flicker {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
         opacity: 1;
