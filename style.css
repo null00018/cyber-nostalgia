@@ -90,7 +90,9 @@ nav a:hover {
 .entry-list .title {
     flex: 1 1 auto;
     white-space: nowrap;
-    text-align: left; 
+    text-align: left;        /* ← これでテキスト自体は左揃えに */
+    padding-left: 0;         /* ← 不要な左パディングを除去 */
+    margin-left: 0;          /* ← 不要なマージンを除去 */
 }
 
 .entry-list li {
