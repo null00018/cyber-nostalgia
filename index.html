@@ -60,43 +60,41 @@
 
     <script>
     function confirmExit() {
-    if (confirm("本当にこの世界からログアウトしますか？")) {
+      if (confirm("本当にこの世界からログアウトしますか？")) {
         alert("また、どこかの電脳で。");
+      }
     }
-}
-
+    
     document.addEventListener("DOMContentLoaded", function () {
       const today = new Date();
-    
       const listItems = document.querySelectorAll('.entry-list li');
     
       listItems.forEach((li, index) => {
-        // ▼ ① 最初は3件だけ表示、それ以降は .hidden
+        // ▼ 最初は3件表示、それ以降は.hidden
         if (index >= 3) {
           li.classList.add('hidden');
         }
     
-        // ▼ ② .meta から日付を読み取って age-x / recent を付加
+        // ▼ metaから日付取得
         const meta = li.querySelector('.meta');
         if (!meta) return;
-        
+    
         const match = meta.textContent.match(/\d{8}/);
         if (!match) return;
-        
+    
         const dateStr = match[0];
         const year = parseInt(dateStr.slice(0, 4));
         const month = parseInt(dateStr.slice(4, 6)) - 1;
         const day = parseInt(dateStr.slice(6, 8));
         const postDate = new Date(year, month, day);
-        
+    
         const diffDays = Math.floor((today - postDate) / (1000 * 60 * 60 * 24));
-        
-        // 最近投稿なら recent クラス追加
+    
+        // recentとage-xを付加
         if (diffDays <= 2) {
           li.classList.add('recent');
         }
-        
-        // ★ 新しい5段階分類に基づく age クラスの追加
+    
         let age;
         if (diffDays <= 7) {
           age = 0;
@@ -110,8 +108,9 @@
           age = 4;
         }
         li.classList.add(`age-${age}`);
+      });
     
-      // ▼ ③ タイトル (.neon) にランダムなアニメーションディレイを付与
+      // ▼ .neon にランダムな animation-delay を一括適用（重複防止）
       const titles = document.querySelectorAll('.entry-list .neon');
       titles.forEach(title => {
         const delay = Math.random() * 2;
@@ -119,7 +118,7 @@
       });
     });
     
-    // ▼ ④ LOGSボタン押下時に隠れた記事を表示（.showでアニメ付き）
+    // ▼ LOGSボタン押下で.hiddenを.showに変更
     function showAllEntries() {
       const hiddenItems = document.querySelectorAll('.entry-list .hidden');
       hiddenItems.forEach(el => {
@@ -131,7 +130,8 @@
     
       event.target.style.display = 'none';
     }
-    </script>    
+    </script>
+    
 
             
 </body>
