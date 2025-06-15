@@ -217,6 +217,25 @@ a.neon {
   padding-left: 1em;
 }
 
+@media screen and (max-width: 600px) {
+  .entry-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .entry-list .title {
+    width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .entry-list .meta {
+    padding-left: 0;
+    margin-top: 0.3em;
+  }
+}
+
 .hidden {
   max-height: 0;
   overflow: hidden;
