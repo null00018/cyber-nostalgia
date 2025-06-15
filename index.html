@@ -79,24 +79,37 @@
         // ▼ ② .meta から日付を読み取って age-x / recent を付加
         const meta = li.querySelector('.meta');
         if (!meta) return;
-    
+        
         const match = meta.textContent.match(/\d{8}/);
         if (!match) return;
-    
+        
         const dateStr = match[0];
         const year = parseInt(dateStr.slice(0, 4));
         const month = parseInt(dateStr.slice(4, 6)) - 1;
         const day = parseInt(dateStr.slice(6, 8));
         const postDate = new Date(year, month, day);
-    
+        
         const diffDays = Math.floor((today - postDate) / (1000 * 60 * 60 * 24));
+        
+        // 最近投稿なら recent クラス追加
         if (diffDays <= 2) {
           li.classList.add('recent');
         }
-    
-        const capped = Math.min(diffDays, 7);
-        li.classList.add(`age-${capped}`);
-      });
+        
+        // ★ 新しい5段階分類に基づく age クラスの追加
+        let age;
+        if (diffDays <= 6) {
+          age = 0;
+        } else if (diffDays <= 19) {
+          age = 1;
+        } else if (diffDays <= 39) {
+          age = 2;
+        } else if (diffDays <= 69) {
+          age = 3;
+        } else {
+          age = 4;
+        }
+        li.classList.add(`age-${age}`);
     
       // ▼ ③ タイトル (.neon) にランダムなアニメーションディレイを付与
       const titles = document.querySelectorAll('.entry-list .neon');
