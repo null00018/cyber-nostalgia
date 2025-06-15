@@ -211,3 +211,8 @@ a.neon {
   margin: 0;
 }
 
+h2 .neon {
+  color: var(--neon-blue);
+  text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
+}
+
