@@ -20,11 +20,22 @@ body {
 }
 
 .article-body {
-  max-width: 100%;
+  max-width: 60ch;
   margin: 1.5em auto;
-  padding: 0 1em;  /* スマホでの左右余白 */
   line-height: 1.8;
   word-break: break-word;
+}
+
+@media screen and (max-width: 600px) {
+  .article-body {
+    max-width: 95vw;
+    font-size: 0.95rem;
+    padding: 0 1em;
+  }
+
+  .article-body pre {
+    font-size: 0.95rem;
+  }
 }
 
 main {
