@@ -127,3 +127,16 @@ nav a:hover {
     padding-left: 1em;
 }
 
+/* 最初は非表示かつ高さゼロ */
+.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+/* 表示状態にすると、スーッと出てくる */
+.show {
+  opacity: 1;
+  max-height: 100px; /* 必要に応じて十分な高さにする */
+}
