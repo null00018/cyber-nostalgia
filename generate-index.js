@@ -1,43 +1,42 @@
-const fs = require("fs");
+const fs = require('fs');
+const path = require('path');
+const { JSDOM } = require('jsdom');
 
-const files = fs.readdirSync(".").filter(f => /^post\d+\.html$/.test(f));
+const templatePath = 'index.html';
+const outputPath = 'index.html';
+const postFiles = fs.readdirSync('.').filter(f => /^post\d+\.html$/.test(f));
 
-const posts = files.map(filename => {
-  const html = fs.readFileSync(filename, "utf8");
+let listItems = [];
 
-  const titleMatch = html.match(/<h2[^>]*><a[^>]*>＞＞\s*(.*?)<\/a><\/h2>/);
-  const dateMatch = html.match(/<p class="meta">(\d{8})<\/p>/);
+postFiles.sort((a, b) => {
+  const numA = parseInt(a.match(/\d+/)[0]);
+  const numB = parseInt(b.match(/\d+/)[0]);
+  return numB - numA; // 新しい順
+}).forEach(file => {
+  const content = fs.readFileSync(file, 'utf-8');
+  const dom = new JSDOM(content);
+  const doc = dom.window.document;
 
-  return {
-    filename,
-    title: titleMatch ? titleMatch[1] : "無題",
-    date: dateMatch ? dateMatch[1] : "00000000"
-  };
+  const titleEl = doc.querySelector('h2.title a');
+  const dateEl = doc.querySelector('.meta');
+  if (!titleEl || !dateEl) return;
+
+  const title = titleEl.textContent.trim();
+  const date = dateEl.textContent.trim();
+
+  listItems.push(`
+              <li>
+                <span class="title"><a href="${file}" class="neon">${title}</a></span>
+                <span class="meta">${date}</span>
+              </li>`);
 });
 
-posts.sort((a, b) => b.date.localeCompare(a.date));
+const originalHtml = fs.readFileSync(templatePath, 'utf-8');
 
-const listHtml = posts.map(post => `
-  <li>
-    <span class="title"><a href="${post.filename}" class="neon">＞＞ ${post.title}</a></span>
-    <span class="meta">${post.date}</span>
-  </li>`).join("\n");
+const updatedHtml = originalHtml.replace(
+  /<ul class="entry-list">[\s\S]*?<\/ul>/,
+  `<ul class="entry-list">\n${listItems.join('\n')}\n            </ul>`
+);
 
-const indexHtml = `<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>CYBER・NOSTALGIA</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1 class="title">＞＞ CYBER・NOSTALGIA</h1>
-    <ul class="entry-list">
-${listHtml}
-    </ul>
-  </div>
-</body>
-</html>`;
-
-fs.writeFileSync("index.html", indexHtml);
+fs.writeFileSync(outputPath, updatedHtml, 'utf-8');
+console.log("✅ index.html updated");
