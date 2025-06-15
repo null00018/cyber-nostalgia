@@ -87,7 +87,32 @@
           event.target.style.display = 'none'; // LOGSボタンを非表示
         }
     </script>
-
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const today = new Date();
+    
+      // 日付文字列が入っている要素を全部探す
+      document.querySelectorAll('.entry-list li').forEach(li => {
+        const meta = li.querySelector('.meta');
+        if (!meta) return;
+    
+        const match = meta.textContent.match(/\d{8}/);
+        if (!match) return;
+    
+        const dateStr = match[1];
+        const year = parseInt(dateStr.slice(0, 4));
+        const month = parseInt(dateStr.slice(4, 6)) - 1; // JSの月は0から始まる
+        const day = parseInt(dateStr.slice(6, 8));
+        const postDate = new Date(year, month, day);
+    
+        const diffDays = (today - postDate) / (1000 * 60 * 60 * 24);
+        if (diffDays <= 2) {
+          li.classList.add('recent'); // 2日以内ならrecentクラス追加
+        }
+      });
+    });
+    </script>
             
 </body>
 </html>
