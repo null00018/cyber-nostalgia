@@ -78,12 +78,14 @@
       });
     
       // LOGSボタンで全部表示
-      function showAllEntries() {
-        document.querySelectorAll('.entry-list .hidden').forEach(el => {
-          el.style.display = 'flex';
-        });
-        event.target.style.display = 'none'; // ボタン非表示
-      }
+        function showAllEntries() {
+          const hiddenItems = document.querySelectorAll('.entry-list .hidden');
+          hiddenItems.forEach(el => {
+            el.classList.add('show');        // アニメーションで表示
+            el.classList.remove('hidden');   // 非表示のクラスは外す
+          });
+          event.target.style.display = 'none'; // LOGSボタンを非表示
+        }
     </script>
 
             
