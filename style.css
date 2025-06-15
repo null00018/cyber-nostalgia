@@ -87,4 +87,29 @@ nav a:hover {
     white-space: nowrap;    /* ← 改行防止（任意） */
 }
 
+.entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.entry-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;  /* タイトルと日付を揃える */
+    margin-bottom: 0.5em;
+}
+
+.entry-list .title {
+    flex: 1 1 auto;
+    white-space: nowrap;
+}
+
+.entry-list .meta {
+    flex-shrink: 0;
+    font-size: 0.75em;
+    color: #aaa;
+    white-space: nowrap;
+    padding-left: 1em;
+}
 
