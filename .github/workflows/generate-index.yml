@@ -1,26 +1,33 @@
-name: Generate index.html
+name: Generate Index
 
 on:
   push:
     paths:
       - 'post*.html'
+      - 'generate-index.js'
 
 jobs:
-  generate:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '20'
 
-      - run: node generate-index.js
+      - name: Install dependencies
+        run: npm install jsdom
 
-      - name: Commit and push index.html
+      - name: Run generate-index.js
+        run: node generate-index.js
+
+      - name: Commit and push changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Auto update index.html"
+          git commit -m "Auto-update index.html" || echo "No changes"
           git push
