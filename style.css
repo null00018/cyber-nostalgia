@@ -13,8 +13,9 @@ body {
     background: linear-gradient(#000010, #0a0a0a);
     color: var(--text-color);
     font-family:
-        'Share Tech Mono', monospace;
-        'DotGothic16', monospace;
+        'Share Tech Mono',
+        'DotGothic16',
+        monospace;
     position: relative;
 }
 
