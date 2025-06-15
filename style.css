@@ -197,7 +197,7 @@ a.neon {
 }
 
 .article-body {
-  max-width: 40ch;           /* 1行あたり60文字程度で自動改行 */
+  max-width: 60ch;           /* 1行あたり60文字程度で自動改行 */
   margin: 1.5em auto;
   line-height: 1.8;
 }
