@@ -4,6 +4,7 @@
     --accent-color: #ff44cc;
     --neon-blue: #44ffff;
     --neon-pink: #ff99cc;
+    --neon-orange: #ffaa33;
 }
 
 body {
@@ -104,13 +105,13 @@ a.neon {
   text-shadow: 0 0 1px #333;
 }
 
-/* 最近の記事にはピンクネオン（強調） */
+/* 最近の記事にはオレンジネオン（強調） */
 .recent a.neon {
-  color: var(--neon-pink);
+  color: var(--neon-orange);
   text-shadow:
-    0 0 5px var(--neon-pink),
-    0 0 10px var(--neon-pink),
-    0 0 20px var(--neon-pink);
+    0 0 5px var(--neon-orange),
+    0 0 10px var(--neon-orange),
+    0 0 20px var(--neon-orange);
 }
 
 @keyframes flicker {
