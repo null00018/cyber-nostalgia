@@ -64,9 +64,7 @@
             alert("また、どこかの電脳で。");
         }
     }
-    </script>
 
-    <script>
       // 初期化処理：6件目以降を .hidden にする
       document.addEventListener("DOMContentLoaded", function () {
         const listItems = document.querySelectorAll('.entry-list li');
@@ -91,9 +89,7 @@
           // LOGSボタンを非表示
           event.target.style.display = 'none';
         }
-    </script>
-    
-    <script>
+
     document.addEventListener("DOMContentLoaded", function () {
       const today = new Date();
     
@@ -117,6 +113,15 @@
         }
       });
     });
+
+          // タイトル（.neon）のアニメーションをバラつかせる
+      const titles = document.querySelectorAll('.entry-list .neon');
+      titles.forEach(title => {
+        const delay = Math.random() * 2; // 0〜2秒のランダムディレイ
+        title.style.animationDelay = `${delay}s`;
+      });
+    });
+        
     </script>
             
 </body>
