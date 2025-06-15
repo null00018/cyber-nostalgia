@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>#01 Blog Start!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
     
 <body>
   <div class="container">
     <article>
-      <h2 class="title">＞＞ #01 Blog Start!</h2>
+      <h2 class="age-0.neon">＞＞ #01 Blog Start!</h2>
       <p class="meta">20250615</p>
         <div class="article-body">
             <pre>
@@ -40,6 +40,16 @@
     function confirmExit() {
       alert("ログアウト中... 電脳空間から切断します。");
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const heading = document.querySelector("h2.title");
+    if (heading) {
+      // タイトルから不要な記号などを取り除いて整形
+      const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+      document.title = cleanTitle;
+    }
+  });
+      
   </script>
 </body>
     
