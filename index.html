@@ -81,10 +81,15 @@
         function showAllEntries() {
           const hiddenItems = document.querySelectorAll('.entry-list .hidden');
           hiddenItems.forEach(el => {
-            el.classList.add('show');        // アニメーションで表示
-            el.classList.remove('hidden');   // 非表示のクラスは外す
+            el.classList.remove('hidden'); // まず非表示クラスを外す
+            // すこし後でshowを追加（次の描画フレームで）
+            requestAnimationFrame(() => {
+              el.classList.add('show');
+            });
           });
-          event.target.style.display = 'none'; // LOGSボタンを非表示
+        
+          // LOGSボタンを非表示
+          event.target.style.display = 'none';
         }
     </script>
     
