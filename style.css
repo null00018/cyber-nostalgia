@@ -78,3 +78,10 @@ nav a:hover {
         opacity: 0.6;
     }
 }
+
+.meta {
+    font-size: 0.75em;
+    color: #aaa;
+    margin-bottom: 1em;
+}
+
