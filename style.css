@@ -132,10 +132,13 @@ nav a:hover {
 }
 
 .hidden {
-  opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.show {
+  max-height: 200px;
+  animation: neonFlickerStable 2.5s ease-out;
 }
 
 @keyframes neonFlickerStable {
@@ -160,11 +163,3 @@ nav a:hover {
     text-shadow: 0 0 5px var(--neon-blue), 0 0 12px var(--neon-blue), 0 0 20px var(--neon-blue);
   }
 }
-
-.show {
-  opacity: 1;
-  max-height: 200px;
-  animation: neonFlickerStable 2.5s ease-out;
-}
-
-
