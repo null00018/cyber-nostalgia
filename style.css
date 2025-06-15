@@ -1,0 +1,80 @@
+:root {
+    --bg-color: #0a0a0a;
+    --text-color: #ccffcc;
+    --accent-color: #ff44cc;
+    --neon-blue: #44ffff;
+    --neon-pink: #ff99cc;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#000010, #0a0a0a);
+    color: var(--text-color);
+    font-family: 'Share Tech Mono', monospace;
+    position: relative;
+}
+
+.scanlines::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 50%, transparent 50%);
+    background-size: 100% 2px;
+    z-index: 999;
+    pointer-events: none;
+    animation: flicker 1s infinite;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    border: 2px solid var(--accent-color);
+    background-color: rgba(0,0,0,0.8);
+}
+
+.title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1rem;
+    color: var(--accent-color);
+    text-align: center;
+    animation: flicker 1.2s infinite;
+}
+
+nav {
+    text-align: center;
+    margin-top: 20px;
+}
+
+nav a {
+    color: var(--neon-pink);
+    background-color: black;
+    padding: 6px 12px;
+    text-decoration: none;
+    border: 1px solid var(--neon-pink);
+    margin: 0 10px;
+    font-family: 'Press Start 2P', monospace;
+}
+
+nav a:hover {
+    color: black;
+    background-color: var(--neon-pink);
+}
+
+.neon {
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+    animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+    }
+    20%, 22%, 55% {
+        opacity: 0.6;
+    }
+}
