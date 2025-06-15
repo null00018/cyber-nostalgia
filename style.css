@@ -195,3 +195,19 @@ a.neon {
     text-shadow: 0 0 5px var(--neon-blue), 0 0 12px var(--neon-blue), 0 0 20px var(--neon-blue);
   }
 }
+
+.article-body {
+  max-width: 40ch;           /* 1行あたり60文字程度で自動改行 */
+  margin: 1.5em auto;
+  line-height: 1.8;
+}
+
+.article-body pre {
+  white-space: pre-wrap;     /* 改行保持＋自動折り返し */
+  font-family: 'Share Tech Mono', monospace;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
