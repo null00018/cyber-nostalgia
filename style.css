@@ -225,7 +225,7 @@ a.neon {
   }
 
   .entry-list .title {
-    flex: 1 1 auto;
+    flex: 1 1 75%;
     white-space: normal;        /* ← 折り返しOKに */
     overflow: visible;
     text-overflow: unset;
