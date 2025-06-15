@@ -98,13 +98,13 @@
         
         // ★ 新しい5段階分類に基づく age クラスの追加
         let age;
-        if (diffDays <= 6) {
+        if (diffDays <= 7) {
           age = 0;
-        } else if (diffDays <= 19) {
+        } else if (diffDays <= 30) {
           age = 1;
-        } else if (diffDays <= 39) {
+        } else if (diffDays <= 90) {
           age = 2;
-        } else if (diffDays <= 69) {
+        } else if (diffDays <= 365) {
           age = 3;
         } else {
           age = 4;
