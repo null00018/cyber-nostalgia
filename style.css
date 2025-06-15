@@ -68,12 +68,46 @@ nav a:hover {
     background-color: var(--neon-pink);
 }
 
+/* 基本のネオンスタイル */
 .neon {
-    color: var(--neon-blue);
-    text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
-    animation: flicker 1.5s infinite;
+  animation: flicker 1.5s infinite;
 }
 
+/* デフォルトのネオン色（最も古い or 未分類） */
+a.neon {
+  color: #446666;
+  text-shadow: 0 0 2px #446666;
+}
+
+/* 若い記事（新しい投稿） */
+.age-0 a.neon,
+.age-1 a.neon {
+  color: var(--neon-blue);
+  text-shadow:
+    0 0 5px var(--neon-blue),
+    0 0 10px var(--neon-blue),
+    0 0 20px var(--neon-blue);
+}
+
+/* 中程度に古い記事 */
+.age-2 a.neon,
+.age-3 a.neon {
+  color: #66cccc;
+  text-shadow:
+    0 0 3px #66cccc,
+    0 0 6px #66cccc;
+}
+
+/* 古い記事（退色ネオン） */
+.age-4 a.neon,
+.age-5 a.neon,
+.age-6 a.neon,
+.age-7 a.neon {
+  color: #446666;
+  text-shadow: 0 0 2px #446666;
+}
+
+/* 最近の記事にはピンクネオン（強調） */
 .recent a.neon {
   color: var(--neon-pink);
   text-shadow:
