@@ -68,13 +68,25 @@
     </script>
 
     <script>
-  function showAllEntries() {
-    document.querySelectorAll('.entry-list .hidden').forEach(el => {
-      el.style.display = 'flex';
-    });
-    event.target.style.display = 'none';
-  }
+      // 初期化処理：6件目以降を .hidden にする
+      document.addEventListener("DOMContentLoaded", function () {
+        const listItems = document.querySelectorAll('.entry-list li');
+        listItems.forEach((li, index) => {
+          if (index >= 5) {
+            li.classList.add('hidden');
+          }
+        });
+      });
+    
+      // LOGSボタンで全部表示
+      function showAllEntries() {
+        document.querySelectorAll('.entry-list .hidden').forEach(el => {
+          el.style.display = 'flex';
+        });
+        event.target.style.display = 'none'; // ボタン非表示
+      }
     </script>
+
             
 </body>
 </html>
