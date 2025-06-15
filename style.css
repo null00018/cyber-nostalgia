@@ -219,20 +219,23 @@ a.neon {
 
 @media screen and (max-width: 600px) {
   .entry-list li {
-    flex-direction: column;
+    flex-direction: row;        /* ← 縦並びではなく横並びのまま */
+    flex-wrap: wrap;            /* ← 必須：折り返し可能に */
     align-items: flex-start;
   }
 
   .entry-list .title {
-    width: 100%;
-    white-space: normal;
+    flex: 1 1 auto;
+    white-space: normal;        /* ← 折り返しOKに */
     overflow: visible;
     text-overflow: unset;
+    padding-right: 0.5em;
   }
 
   .entry-list .meta {
-    padding-left: 0;
-    margin-top: 0.3em;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-top: 0.25em;
   }
 }
 
