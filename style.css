@@ -20,14 +20,15 @@ body {
 }
 
 .article-body {
-    max-width: 60ch;
-    margin: 1.5em auto;
-    line-height: 1.8;
-    word-break: break-word;
-    font-family:
-        'Share Tech Mono',
-        'DotGothic16',
-        monospace;
+  white-space: pre-wrap;        /* ← 改行も空白もそのまま保持 */
+  word-break: break-word;       /* ← 単語の途中でも折り返し可能 */
+  max-width: 60ch;
+  margin: 1.5em auto;
+  line-height: 1.8;
+  font-family:
+    'Share Tech Mono',
+    'DotGothic16',
+    monospace;
 }
 
 @media screen and (max-width: 600px) {
