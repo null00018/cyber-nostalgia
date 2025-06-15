@@ -31,6 +31,21 @@ body {
     monospace;
 }
 
+.article-body pre {
+  white-space: pre-wrap;       /* 改行を反映させる */
+  word-break: break-word;      /* 長すぎる語も折り返す */
+  font-family:
+    'DotGothic16',
+    'Share Tech Mono',
+    monospace;
+  font-size: 1rem;
+  line-height: 1.8;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
 @media screen and (max-width: 600px) {
   .article-body {
     max-width: 95vw;
@@ -39,6 +54,13 @@ body {
   }
 
   .article-body pre {
+    font-size: 0.95rem;
+  }
+}
+
+ .article-body pre {
+    white-space: pre-wrap;
+    word-break: break-word;
     font-size: 0.95rem;
   }
 }
