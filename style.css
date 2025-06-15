@@ -172,23 +172,27 @@ a.neon {
 }
 
 .entry-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;  /* タイトルと日付を揃える */
-    margin-bottom: 0.5em;
+  display: flex;
+  flex-wrap: wrap; /* ← ここが重要！スマホで折り返し可能に */
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5em;
 }
 
 .entry-list .title {
-    flex: 1 1 auto;
-    white-space: nowrap;
+  flex: 1 1 70%;
+  min-width: 0;              /* ← 長すぎるタイトルを防止 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .entry-list .meta {
-    flex-shrink: 0;
-    font-size: 0.75em;
-    color: #aaa;
-    white-space: nowrap;
-    padding-left: 1em;
+  flex: 0 0 auto;
+  font-size: 0.75em;
+  color: #aaa;
+  white-space: nowrap;
+  padding-left: 1em;
 }
 
 .hidden {
