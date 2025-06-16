@@ -24,9 +24,16 @@
     <label>タイトル</label>
     <input type="text" id="title" required>
 
-    <label>日付（例：20250617）</label>
-    <input type="text" id="date" required pattern="\\d{8}">
-
+    <label for="dateField">日付:</label>
+    <input type="date" name="date" id="dateField" required>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("dateField").value = today;
+      });
+    </script>
+    
     <label>本文</label>
     <textarea id="body" rows="10" required></textarea>
 
