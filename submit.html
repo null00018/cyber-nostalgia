@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ブログ投稿フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2em auto;
+      padding: 1em;
+    }
+    label, textarea, input, button {
+      display: block;
+      width: 100%;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>ブログ投稿</h1>
+  <form id="postForm">
+    <label>タイトル</label>
+    <input type="text" id="title" required>
+
+    <label>日付（例：20250617）</label>
+    <input type="text" id="date" required pattern="\\d{8}">
+
+    <label>本文</label>
+    <textarea id="body" rows="10" required></textarea>
+
+    <button type="submit">投稿する</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    document.getElementById("postForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("title").value;
+      const date = document.getElementById("date").value;
+      const body = document.getElementById("body").value;
+
+      const content = `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ ${title}</a></h2>
+      <p class="meta">${date}</p>
+      <div class="article-body">${body.replace(/\n/g, "<br>")}</div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>`.trim();
+
+      const filename = `post${Date.now()}.html`;
+
+      const res = await fetch("https://api.github.com/repos/null00018/cyber-nostalgia/contents/" + filename, {
+        method: "PUT",
+        headers: {
+          "Authorization": "token YOUR_GITHUB_PAT",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: `Add ${filename}`,
+          content: btoa(unescape(encodeURIComponent(content))),
+          branch: "main"
+        })
+      });
+
+      const status = document.getElementById("status");
+      if (res.ok) {
+        status.textContent = `✅ 投稿しました → ${filename}`;
+      } else {
+        const err = await res.json();
+        status.textContent = `❌ エラー: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
