@@ -1,0 +1,58 @@
+name: Create blog post from issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-post:
+    if: github.event.issue.title != '' && github.event.issue.body != ''
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate post file
+        id: generate
+        run: |
+          TITLE="${{ github.event.issue.title }}"
+          BODY="${{ github.event.issue.body }}"
+          DATE=$(date +"%Y%m%d")
+          FILENAME="post${{ github.event.issue.number }}.html"
+
+          cat <<EOF > \$FILENAME
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>\$TITLE</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ \$TITLE</a></h2>
+      <p class="meta">\$DATE</p>
+      <div class="article-body">
+        \$(echo "\$BODY" | sed 's/$/<br>/')
+      </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>
+EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add post${{ github.event.issue.number }}.html
+          git commit -m "Add post${{ github.event.issue.number }}.html from issue"
+          git push
