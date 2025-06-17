@@ -1,22 +1,43 @@
-<form action="https://api.github.com/repos/ユーザー名/リポジトリ名/issues" method="POST">
-  <input type="hidden" name="title" id="issue-title">
-  <textarea name="body" id="issue-body" style="display:none;"></textarea>
-  <label>タイトル: <input type="text" id="title" required></label>
-  <label>日付: <input type="date" id="date" required></label>
-  <label>本文: <textarea id="content" rows="10" required></textarea>
-  <button type="submit">投稿</button>
-</form>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ブログ投稿フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2em auto;
+      padding: 1em;
+    }
+    label, textarea, input, button {
+      display: block;
+      width: 100%;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>ブログ投稿</h1>
+  <form id="postForm">
+    <label>タイトル</label>
+    <input type="text" id="title" required>
 
-<script>
-  document.querySelector("form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const title = document.getElementById("title").value;
-    const date = document.getElementById("date").value;
-    const body = document.getElementById("content").value;
+    <label>本文</label>
+    <textarea id="body" rows="10" required></textarea>
 
-    document.getElementById("issue-title").value = `📬 ${title}`;
-    document.getElementById("issue-body").value = `::date::${date}\n::content::\n${body}`;
+    <button type="submit">投稿する（GitHubに移動）</button>
+  </form>
 
-    e.target.submit();
-  });
-</script>
+  <script>
+    document.getElementById("postForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = encodeURIComponent(document.getElementById("title").value);
+      const body = encodeURIComponent(document.getElementById("body").value);
+      const url = `https://github.com/null00018/cyber-nostalgia/issues/new?title=${title}&body=${body}`;
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>
