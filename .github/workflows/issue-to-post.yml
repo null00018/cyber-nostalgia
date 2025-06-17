@@ -1,35 +1,51 @@
-name: Create blog post from issue
+name: Create post from issue
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  create-post:
-    if: github.event.issue.title != '' && github.event.issue.body != ''
+  build:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Generate post file
-        id: generate
-        run: |
-          TITLE="${{ github.event.issue.title }}"
-          BODY="${{ github.event.issue.body }}"
-          DATE=$(date +"%Y%m%d")
-          FILENAME="post${{ github.event.issue.number }}.html"
+      - name: Extract issue content
+        uses: actions/github-script@v7
+        id: issue
+        with:
+          script: |
+            const body = context.payload.issue.body;
+            const fs = require('fs');
+            fs.writeFileSync('issue.md', body);
 
-          cat <<EOF > \$FILENAME
+      - name: Parse front matter
+        id: vars
+        run: |
+          TITLE=$(grep '^title:' issue.md | sed 's/title: //')
+          DATE=$(grep '^date:' issue.md | sed 's/date: //')
+          if [ -z "$DATE" ]; then
+            DATE=$(date +"%Y%m%d")
+          fi
+          BODY=$(awk '/^---/{f++} f==2' issue.md | tail -n +2)
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+          echo "$BODY" > content.txt
+
+      - name: Create HTML file
+        run: |
+          FILENAME=post$(date +%s).html
+          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          cat <<EOF > $FILENAME
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>\$TITLE</title>
+  <title>${{ steps.vars.outputs.title }}</title>
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,10 +53,10 @@ jobs:
 <body>
   <div class="container">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ \$TITLE</a></h2>
-      <p class="meta">\$DATE</p>
+      <h2 class="title"><a class="neon" href="#">＞＞ ${{ steps.vars.outputs.title }}</a></h2>
+      <p class="meta">${{ steps.vars.outputs.date }}</p>
       <div class="article-body">
-        \$(echo "\$BODY" | sed 's/$/<br>/')
+$(cat content.txt | sed 's/^/        /')
       </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
@@ -49,10 +65,15 @@ jobs:
 </html>
 EOF
 
-      - name: Commit and push
+      - name: Commit post
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add post${{ github.event.issue.number }}.html
-          git commit -m "Add post${{ github.event.issue.number }}.html from issue"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add $FILENAME
+          git commit -m "Add $FILENAME"
           git push
+
+      - name: Trigger index update
+        run: |
+          echo "Post created: $FILENAME"
+          # あなたの既存の index.html 自動更新ワークフローがここで動作する想定です
