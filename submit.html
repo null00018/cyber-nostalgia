@@ -1,3 +1,4 @@
+--- submit.html ---
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -24,20 +25,129 @@
     <label>タイトル</label>
     <input type="text" id="title" required>
 
+    <label>日付（任意・例: 20250618）</label>
+    <input type="text" id="date" placeholder="未入力なら今日の日付">
+
     <label>本文</label>
     <textarea id="body" rows="10" required></textarea>
 
-    <button type="submit">投稿する（GitHubに移動）</button>
+    <button type="submit">投稿する</button>
   </form>
 
+  <p id="status"></p>
+
   <script>
-    document.getElementById("postForm").addEventListener("submit", (e) => {
+    document.getElementById("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const title = encodeURIComponent(document.getElementById("title").value);
-      const body = encodeURIComponent(document.getElementById("body").value);
-      const url = `https://github.com/null00018/cyber-nostalgia/issues/new?title=${title}&body=${body}`;
-      window.open(url, "_blank");
+      const title = document.getElementById("title").value;
+      const date = document.getElementById("date").value.trim();
+      const body = document.getElementById("body").value;
+
+      const issueBody = `---\ntitle: ${title}\ndate: ${date}\n---\n\n${body}`;
+
+      const res = await fetch("https://api.github.com/repos/null00018/cyber-nostalgia/issues", {
+        method: "POST",
+        headers: {
+          "Authorization": "token YOUR_GITHUB_PAT",
+          "Accept": "application/vnd.github+json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title: title,
+          body: issueBody
+        })
+      });
+
+      const status = document.getElementById("status");
+      if (res.ok) {
+        status.textContent = "✅ 投稿を受け付けました！";
+      } else {
+        const err = await res.json();
+        status.textContent = `❌ エラー: ${err.message}`;
+      }
     });
   </script>
 </body>
 </html>
+
+
+--- .github/workflows/post.yml ---
+name: Create post from issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Extract issue content
+        uses: actions/github-script@v7
+        id: issue
+        with:
+          script: |
+            const body = context.payload.issue.body;
+            const fs = require('fs');
+            fs.writeFileSync('issue.md', body);
+
+      - name: Parse front matter
+        id: vars
+        run: |
+          TITLE=$(grep '^title:' issue.md | sed 's/title: //')
+          DATE=$(grep '^date:' issue.md | sed 's/date: //')
+          if [ -z "$DATE" ]; then
+            DATE=$(date +"%Y%m%d")
+          fi
+          BODY=$(awk '/^---/{f++} f==2' issue.md | tail -n +2)
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+          echo "$BODY" > content.txt
+
+      - name: Create HTML file
+        run: |
+          FILENAME=post$(date +%s).html
+          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          cat <<EOF > $FILENAME
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>${{ steps.vars.outputs.title }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ ${{ steps.vars.outputs.title }}</a></h2>
+      <p class="meta">${{ steps.vars.outputs.date }}</p>
+      <div class="article-body">
+$(cat content.txt | sed 's/^/        /')
+      </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>
+EOF
+
+      - name: Commit post
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add $FILENAME
+          git commit -m "Add $FILENAME"
+          git push
+
+      - name: Trigger index update
+        run: |
+          echo "Post created: $FILENAME"
+          # あなたの既存の index.html 自動更新ワークフローがここで動作する想定です
