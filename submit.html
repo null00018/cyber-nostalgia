@@ -1,99 +1,22 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>ブログ投稿フォーム</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 600px;
-      margin: 2em auto;
-      padding: 1em;
-    }
-    label, textarea, input, button {
-      display: block;
-      width: 100%;
-      margin-top: 1em;
-    }
-  </style>
-</head>
-<body>
-  <h1>ブログ投稿</h1>
-  <form id="postForm">
-    <label>タイトル</label>
-    <input type="text" id="title" required>
+<form action="https://api.github.com/repos/ユーザー名/リポジトリ名/issues" method="POST">
+  <input type="hidden" name="title" id="issue-title">
+  <textarea name="body" id="issue-body" style="display:none;"></textarea>
+  <label>タイトル: <input type="text" id="title" required></label>
+  <label>日付: <input type="date" id="date" required></label>
+  <label>本文: <textarea id="content" rows="10" required></textarea>
+  <button type="submit">投稿</button>
+</form>
 
-    <label for="dateField">日付:</label>
-    <input type="date" name="date" id="dateField" required>
-    
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const today = new Date().toISOString().split("T")[0];
-        document.getElementById("dateField").value = today;
-      });
-    </script>
-    
-    <label>本文</label>
-    <textarea id="body" rows="10" required></textarea>
+<script>
+  document.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = document.getElementById("title").value;
+    const date = document.getElementById("date").value;
+    const body = document.getElementById("content").value;
 
-    <button type="submit">投稿する</button>
-  </form>
+    document.getElementById("issue-title").value = `📬 ${title}`;
+    document.getElementById("issue-body").value = `::date::${date}\n::content::\n${body}`;
 
-  <p id="status"></p>
-
-  <script>
-    document.getElementById("postForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("title").value;
-      const date = document.getElementById("date").value;
-      const body = document.getElementById("body").value;
-
-      const content = `
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>${title}</title>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <div class="container">
-    <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ ${title}</a></h2>
-      <p class="meta">${date}</p>
-      <div class="article-body">${body.replace(/\n/g, "<br>")}</div>
-      <p class="neon"><a href="index.html">←START</a></p>
-    </article>
-  </div>
-</body>
-</html>`.trim();
-
-      const filename = `post${Date.now()}.html`;
-
-      const res = await fetch("https://api.github.com/repos/null00018/cyber-nostalgia/contents/" + filename, {
-        method: "PUT",
-        headers: {
-          "Authorization": "token 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",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: `Add ${filename}`,
-          content: btoa(unescape(encodeURIComponent(content))),
-          branch: "main"
-        })
-      });
-
-      const status = document.getElementById("status");
-      if (res.ok) {
-        status.textContent = `✅ 投稿しました → ${filename}`;
-      } else {
-        const err = await res.json();
-        status.textContent = `❌ エラー: ${err.message}`;
-      }
-    });
-  </script>
-</body>
-</html>
+    e.target.submit();
+  });
+</script>
