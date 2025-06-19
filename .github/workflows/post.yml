@@ -1,0 +1,79 @@
+name: Generate blog post
+
+on:
+  push:
+    paths:
+      - '.github/entries/*.json'
+
+jobs:
+  generate-post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Generate HTML
+        run: |
+          mkdir -p posts
+          entry=".github/entries/$(ls .github/entries | tail -n1)"
+          echo "Processing $entry"
+          title=$(jq -r .title "$entry")
+          date=$(jq -r .date "$entry")
+          body=$(jq -r .body "$entry" | sed 's/$/<br>/')
+
+          number=$(ls posts/post*.html 2>/dev/null | wc -l)
+          postfile="posts/post$((number + 1)).html"
+
+          cat <<EOF > $postfile
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>$title</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ $title</a></h2>
+      <p class="meta">$date</p>
+      <div class="article-body">
+        $body
+      </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>
+EOF
+
+      - name: Update index.html
+        run: |
+          posts=$(ls -1 posts/post*.html | sort -V)
+          entries=""
+          for f in $posts; do
+            title=$(grep -oP '(?<=＞＞ ).*(?=</a>)' "$f")
+            ymd=$(grep -oP '\d{8}' "$f" | head -n1)
+            entries="$entries\n              <li>\n                <span class=\"title\"><a href=\"$f\" class=\"neon\">＞＞ $title</a></span>\n                <span class=\"meta\">$ymd</span>\n              </li>"
+          done
+
+          awk -v entries="$entries" '
+            /<ul class="entry-list">/ { print; print entries; found=1; next }
+            found && /<\/ul>/ { found=0; next }
+            { print }
+          ' index.html > index_tmp.html && mv index_tmp.html index.html
+
+      - name: Commit and push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add posts/*.html index.html
+          git commit -m "Auto-generate post from JSON entry"
+          git push
