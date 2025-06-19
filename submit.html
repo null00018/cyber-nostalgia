@@ -24,36 +24,76 @@
     <label>タイトル</label>
     <input type="text" id="title" required>
 
-    <label>日付（例: 20250618）</label>
+    <label>日付（例: 20250618、空なら今日）</label>
     <input type="text" id="date" placeholder="未入力なら今日の日付">
 
     <label>本文</label>
     <textarea id="body" rows="10" required></textarea>
 
-    <button type="submit">GitHubで投稿ファイルを作成</button>
+    <button type="submit">投稿する</button>
   </form>
 
+  <p id="status"></p>
+
   <script>
-    document.getElementById("postForm").addEventListener("submit", (e) => {
+    const GITHUB_TOKEN = "YOUR_GITHUB_PAT"; // ← ご自身のトークンに置き換えてください
+    const REPO = "null00018/cyber-nostalgia";
+    const BRANCH = "main";
+
+    document.getElementById("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const title = document.getElementById("title").value.trim();
       const dateInput = document.getElementById("date").value.trim();
-      const body = document.getElementById("body").value.trim();
       const date = dateInput || new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const body = document.getElementById("body").value.trim();
 
-      const filename = `entry-${Date.now()}.json`;
-      const jsonContent = {
-        title: title,
-        date: date,
-        body: body
-      };
+      const htmlContent = `
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ ${title}</a></h2>
+      <p class="meta">${date}</p>
+      <div class="article-body">${body.replace(/\n/g, "<br>")}</div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>`.trim();
 
-      const jsonStr = JSON.stringify(jsonContent, null, 2);
-      const encoded = encodeURIComponent(jsonStr);
+      const filename = `post${Date.now()}.html`;
+      const encodedContent = btoa(unescape(encodeURIComponent(htmlContent)));
 
-      const url = `https://github.com/null00018/cyber-nostalgia/new/main/.github/entries?filename=${filename}&value=${encoded}`;
-      window.open(url, "_blank");
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/posts/${filename}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: `Add ${filename}`,
+          content: encodedContent,
+          branch: BRANCH
+        })
+      });
+
+      const status = document.getElementById("status");
+      if (res.ok) {
+        status.textContent = `✅ 投稿完了 → ${filename}`;
+        document.getElementById("postForm").reset();
+      } else {
+        const err = await res.json();
+        status.textContent = `❌ エラー: ${err.message}`;
+      }
     });
   </script>
 </body>
