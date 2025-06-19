@@ -4,59 +4,54 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  contents: write
+
 jobs:
-  build:
+  generate-post:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Extract issue content
-        uses: actions/github-script@v7
-        id: issue
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          script: |
-            const body = context.payload.issue.body;
-            const fs = require('fs');
-            fs.writeFileSync('issue.md', body);
+          node-version: 18
 
-      - name: Parse front matter
-        id: vars
+      - name: Extract metadata
+        id: extract
         run: |
-          TITLE=$(grep '^title:' issue.md | sed 's/title: //')
-          DATE=$(grep '^date:' issue.md | sed 's/date: //')
-          if [ -z "$DATE" ]; then
-            DATE=$(date +"%Y%m%d")
-          fi
-          BODY=$(awk '/^---/{f++} f==2' issue.md | tail -n +2)
-          echo "title=$TITLE" >> $GITHUB_OUTPUT
-          echo "date=$DATE" >> $GITHUB_OUTPUT
-          echo "$BODY" > content.txt
+          echo "${{ github.event.issue.body }}" > issue.md
+          TITLE=$(grep '^title:' issue.md | sed 's/^title: *//')
+          DATE=$(grep '^date:' issue.md | sed 's/^date: *//')
+          BODY=$(sed -n '/^---$/,/^---$/!p' issue.md | tail -n +2)
+          SLUG="post$(date +%s).html"
+          echo "TITLE=$TITLE" >> $GITHUB_OUTPUT
+          echo "DATE=$DATE" >> $GITHUB_OUTPUT
+          echo "BODY<<EOF" >> $GITHUB_OUTPUT
+          echo "$BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "SLUG=$SLUG" >> $GITHUB_OUTPUT
 
       - name: Create HTML file
         run: |
-          FILENAME=post$(date +%s).html
-          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
-          cat <<EOF > $FILENAME
+          mkdir -p posts
+          cat > posts/${{ steps.extract.outputs.SLUG }} <<EOF
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>${{ steps.vars.outputs.title }}</title>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <title>${{ steps.extract.outputs.TITLE }}</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <div class="container">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ ${{ steps.vars.outputs.title }}</a></h2>
-      <p class="meta">${{ steps.vars.outputs.date }}</p>
+      <h2 class="title"><a class="neon" href="#">＞＞ ${{ steps.extract.outputs.TITLE }}</a></h2>
+      <p class="meta">${{ steps.extract.outputs.DATE }}</p>
       <div class="article-body">
-$(cat content.txt | sed 's/^/        /')
+        ${{ steps.extract.outputs.BODY }}
       </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
@@ -65,15 +60,14 @@ $(cat content.txt | sed 's/^/        /')
 </html>
 EOF
 
-      - name: Commit post
+      - name: Update index.html
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add $FILENAME
-          git commit -m "Add $FILENAME"
-          git push
+          # 挿入処理（必要に応じて実装）
 
-      - name: Trigger index update
+      - name: Commit and push
         run: |
-          echo "Post created: $FILENAME"
-          # あなたの既存の index.html 自動更新ワークフローがここで動作する想定です
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add posts/${{ steps.extract.outputs.SLUG }}
+          git commit -m "Add: ${{ steps.extract.outputs.SLUG }}"
+          git push
