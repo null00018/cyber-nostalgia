@@ -76,7 +76,7 @@
       const res = await fetch(`https://api.github.com/repos/${REPO}/contents/posts/${filename}`, {
         method: "PUT",
         headers: {
-          Authorization: `token ${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}`,
+          "Authorization": "token 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"
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
