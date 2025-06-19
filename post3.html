@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+    
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #03 海よりもまだ深く</a></h2>
+      <p class="meta">20250619</p>
+        <div class="article-body">
+         
+
+2016年公開。監督は是枝裕和。主演阿部寛。団地を舞台にしたダメ男とその家族の映画で、特段のことは起きない。
+
+阿部寛は、一度小説でちょっとした賞をとって以来鳴かず飛ばずで、こんなはずではなかったと思いながら興信所で働いている。結婚して子どももいるが、ギャンブル好きもあって妻の真木よう子には愛想を尽かされて既に離婚。
+
+阿部寛の父親は亡くなったばかりで、彼が育った団地には母親の樹木希林が一人で悠々と暮らしている。姉役は小林聡美。
+
+この二人の女性の会話から映画は始まるのだけれど、とにかく淡々としていて、終始このトーンで続いていくので、安心してというか見られます。見方によってはスリリングなシーンもあるけれど、ハナレグミの音楽も相まって、のんびりしてて滑稽で、でもべつにハッピーでもバッドでもないというか、まあままならないよねーという映画でした。阿部寛の演技っていつもあれじゃん！とは思ったり。
+
+是枝監督といえば樹木希林ですが、こんな婆ちゃんいるかよ！と思いつつも、団地がよく似合う。公式ホームページによれば、実際に是枝監督が育った団地だそうで、どこまでそこなのかわからないけど、緑なんか綺麗で、なかなか住み良さそう。
+
+とはいえ風呂はかなり狭くて汚そうで、うーむ、という感じ。「なりたいものになれなかったのは団地も同じなんですよね」と監督は語っているが、かつては夢の集合住宅だった団地は、いまや老朽化を迎えて空き室に頭を抱え、集約化が進んでいるという話も聞く。
+
+いいと思うんだけどなあ団地。なんというか、金太郎飴みたいかもしれないけど、そういう共通の記憶みたいなものってやっぱ羨ましくなりますね。多分住んでたら出て行きたくなるんだろうけど。
+
+今はなんというか、ままならないものから逃れるハードルが低くて、妥協したり、なあなあにしたりということが難しくなってるけど、それがいいこととも限らないよなあと観ながら思いました。まあそのままならないその最たるものが家族なんでしょうね。
+
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const heading = document.querySelector("h2.title");
+    if (heading) {
+      // タイトルから不要な記号などを取り除いて整形
+      const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+      document.title = cleanTitle;
+    }
+  });
+      
+  </script>
+</body>
+    
+</html>
