@@ -38,8 +38,10 @@
   <script>
     document.getElementById("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const title = document.getElementById("title").value;
-      const date = document.getElementById("date").value.trim();
+      const dateInput = document.getElementById("date").value.trim();
+      const date = dateInput || new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const body = document.getElementById("body").value;
 
       const issueBody = `---\ntitle: ${title}\ndate: ${date}\n---\n\n${body}`;
@@ -47,9 +49,7 @@
       const res = await fetch("https://api.github.com/repos/null00018/cyber-nostalgia/issues", {
         method: "POST",
         headers: {
-          "Authorization": "token YOUR_GITHUB_PAT",
-          "Accept": "application/vnd.github+json",
-          "Content-Type": "application/json"
+          Accept: "application/vnd.github+json"
         },
         body: JSON.stringify({
           title: title,
@@ -59,7 +59,8 @@
 
       const status = document.getElementById("status");
       if (res.ok) {
-        status.textContent = "✅ 投稿を受け付けました！";
+        status.textContent = "✅ 投稿を受け付けました！反映までしばらくお待ちください。";
+        document.getElementById("postForm").reset();
       } else {
         const err = await res.json();
         status.textContent = `❌ エラー: ${err.message}`;
