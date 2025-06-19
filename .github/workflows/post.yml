@@ -14,54 +14,44 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Extract issue info
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const title = context.payload.issue.title;
-            const body = context.payload.issue.body;
+      - name: Create postx.html from issue
+        run: |
+          echo "${{ github.event.issue.body }}" > issue.md
+          TITLE=$(grep '^title:' issue.md | sed 's/^title: //')
+          DATE=$(grep '^date:' issue.md | sed 's/^date: //')
+          CONTENT=$(awk 'NR>3' issue.md)
 
-            const match = body.match(/---\ntitle: (.*?)\ndate: (.*?)\n---\n\n([\s\S]*)/);
-            if (!match) {
-              core.setFailed("Issue body format incorrect");
-              return;
-            }
+          FILENAME="post${{ github.event.issue.number }}.html"
+          echo "✅ Creating $FILENAME"
 
-            const [, postTitle, postDate, postContent] = match;
-            const timestamp = new Date().getTime();
-            const filename = `post${timestamp}.html`;
-
-            const html = `
+          cat > $FILENAME <<EOF
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>${postTitle}</title>
+  <title>$TITLE</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <div class="container">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ ${postTitle}</a></h2>
-      <p class="meta">${postDate}</p>
-      <div class="article-body">${postContent.replace(/\n/g, "<br>")}</div>
+      <h2 class="title"><a class="neon" href="#">＞＞ $TITLE</a></h2>
+      <p class="meta">$DATE</p>
+      <div class="article-body">
+        ${CONTENT//$'\n'/<br>}
+      </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
   </div>
 </body>
 </html>
-`.trim();
-
-            fs.writeFileSync(filename, html);
-            core.setOutput("filename", filename);
-            console.log(`✅ Created ${filename}`);
+EOF
 
       - name: Commit post
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add post*.html
-          git commit -m "投稿追加"
+          git commit -m "投稿追加: $FILENAME"
           git push
