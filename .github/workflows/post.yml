@@ -10,37 +10,37 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create postx.html from issue
+      - name: Generate HTML file
         run: |
-          echo "${{ github.event.issue.body }}" > issue.md
-          TITLE=$(grep '^title:' issue.md | sed 's/^title: //')
-          DATE=$(grep '^date:' issue.md | sed 's/^date: //')
-          CONTENT=$(awk 'NR>3' issue.md)
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          ISSUE_BODY="${{ github.event.issue.body }}"
+          
+          POST_TITLE=$(echo "$ISSUE_BODY" | sed -n 's/^title: //p')
+          POST_DATE=$(echo "$ISSUE_BODY" | sed -n 's/^date: //p')
+          POST_CONTENT=$(echo "$ISSUE_BODY" | sed -n '/^---$/,/^---$/!p' | sed '1,2d')
 
-          FILENAME="post${{ github.event.issue.number }}.html"
-          echo "✅ Creating $FILENAME"
+          FILENAME="post$(date +%s).html"
 
-          cat > $FILENAME <<EOF
+          cat <<EOF > $FILENAME
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>$TITLE</title>
+  <title>$POST_TITLE</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <div class="container">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ $TITLE</a></h2>
-      <p class="meta">$DATE</p>
-      <div class="article-body">
-        ${CONTENT//$'\n'/<br>}
-      </div>
+      <h2 class="title"><a class="neon" href="#">＞＞ $POST_TITLE</a></h2>
+      <p class="meta">$POST_DATE</p>
+      <div class="article-body">${POST_CONTENT//$'\n'/<br>}</div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
   </div>
@@ -48,10 +48,12 @@ jobs:
 </html>
 EOF
 
+          echo "✅ Created $FILENAME"
+
       - name: Commit post
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add post*.html
-          git commit -m "投稿追加: $FILENAME"
+          git commit -m "Add blog post from issue"
           git push
