@@ -1,73 +1,53 @@
-name: Create post from issue
+name: Issue to Blog Post
 
 on:
   issues:
     types: [opened]
 
-permissions:
-  contents: write
-
 jobs:
-  generate-post:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+    - name: Generate post HTML
+      run: |
+        mkdir -p posts
+        TITLE=$(echo "${{ github.event.issue.body }}" | grep '^title:' | sed 's/title: //')
+        DATE=$(echo "${{ github.event.issue.body }}" | grep '^date:' | sed 's/date: //')
+        BODY=$(echo "${{ github.event.issue.body }}" | awk '/^---$/,/^---$/{next} 1')
+        NUM=$(ls posts | grep -o 'post[0-9]*\.html' | sed 's/post\([0-9]*\)\.html/\1/' | sort -n | tail -1)
+        NEXT=$((NUM + 1))
+        FILENAME=post${NEXT}.html
 
-      - name: Extract metadata
-        id: extract
-        run: |
-          echo "${{ github.event.issue.body }}" > issue.md
-          TITLE=$(grep '^title:' issue.md | sed 's/^title: *//')
-          DATE=$(grep '^date:' issue.md | sed 's/^date: *//')
-          BODY=$(sed -n '/^---$/,/^---$/!p' issue.md | tail -n +2)
-          SLUG="post$(date +%s).html"
-          echo "TITLE=$TITLE" >> $GITHUB_OUTPUT
-          echo "DATE=$DATE" >> $GITHUB_OUTPUT
-          echo "BODY<<EOF" >> $GITHUB_OUTPUT
-          echo "$BODY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          echo "SLUG=$SLUG" >> $GITHUB_OUTPUT
-
-      - name: Create HTML file
-        run: |
-          mkdir -p posts
-          cat > posts/${{ steps.extract.outputs.SLUG }} <<EOF
-<!DOCTYPE html>
-<html lang="ja">
+        echo "<!DOCTYPE html>
+<html lang=\"ja\">
 <head>
-  <meta charset="UTF-8">
-  <title>${{ steps.extract.outputs.TITLE }}</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset=\"UTF-8\">
+  <title>${TITLE}</title>
+  <link href=\"https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap\" rel=\"stylesheet\">
+  <link rel=\"stylesheet\" href=\"style.css\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 </head>
 <body>
-  <div class="container">
+  <div class=\"container\">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ ${{ steps.extract.outputs.TITLE }}</a></h2>
-      <p class="meta">${{ steps.extract.outputs.DATE }}</p>
-      <div class="article-body">
-        ${{ steps.extract.outputs.BODY }}
-      </div>
-      <p class="neon"><a href="index.html">←START</a></p>
+      <h2 class=\"title\"><a class=\"neon\" href=\"#\">＞＞ ${TITLE}</a></h2>
+      <p class=\"meta\">${DATE}</p>
+      <div class=\"article-body\">${BODY//'\n'/<br>}</div>
+      <p class=\"neon\"><a href=\"index.html\">←START</a></p>
     </article>
   </div>
 </body>
-</html>
-EOF
+</html>" > posts/$FILENAME
 
-      - name: Update index.html
-        run: |
-          # 挿入処理（必要に応じて実装）
-
-      - name: Commit and push
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add posts/${{ steps.extract.outputs.SLUG }}
-          git commit -m "Add: ${{ steps.extract.outputs.SLUG }}"
-          git push
+    - name: Commit and push
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add posts/
+        git commit -m "Add: ${FILENAME}"
+        git push
