@@ -1,0 +1,34 @@
+name: Generate Post from Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install js-yaml
+
+      - name: Generate post from issue
+        run: |
+          echo '${{ toJSON(github.event.issue) }}' > issue.json
+          node generate-from-issue.js
+
+      - name: Commit post
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add post*.html
+          git commit -m "Generate post from issue #${{ github.event.issue.number }}" || echo "No changes"
+          git push
