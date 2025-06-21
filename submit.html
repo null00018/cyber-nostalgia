@@ -20,56 +20,23 @@
 </head>
 <body>
   <h1>ブログ投稿</h1>
-  <form id="postForm">
+  <form id="issueForm" target="_blank" action="https://github.com/null00018/cyber-nostalgia/issues/new" method="GET">
     <label>タイトル</label>
-    <input type="text" id="title" required>
-
-    <label>日付（例: 20250618、空なら今日）</label>
-    <input type="text" id="date" placeholder="未入力なら今日の日付">
+    <input type="text" name="title" id="title" required>
 
     <label>本文</label>
-    <textarea id="body" rows="10" required></textarea>
+    <textarea name="body" id="body" rows="10" required>
+---
+date: 20250622
+---
 
-    <button type="submit">投稿する</button>
+ここに本文を書いてください。
+
+例：
+90年代のネオン街に溶けるような、夜のポスト。
+    </textarea>
+
+    <button type="submit">GitHubで投稿</button>
   </form>
-  <p id="status"></p>
-
-  <script>
-    const ENDPOINT = "https://api.github.com/repos/null00018/cyber-nostalgia/dispatches";
-
-    document.getElementById("postForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = document.getElementById("title").value.trim();
-      const dateInput = document.getElementById("date").value.trim();
-      const date = dateInput || new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      const body = document.getElementById("body").value.trim();
-
-      const payload = {
-        event_type: "new_blog_post", // GitHub Actionsでハンドルするイベント名
-        client_payload: {
-          title,
-          date,
-          body
-        }
-      };
-
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const status = document.getElementById("status");
-      if (res.ok) {
-        status.textContent = "✅ 投稿を受け付けました！反映までお待ちください。";
-        document.getElementById("postForm").reset();
-      } else {
-        const err = await res.json();
-        status.textContent = `❌ エラー: ${err.message || '送信失敗'}`;
-      }
-    });
-  </script>
 </body>
 </html>
