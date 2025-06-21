@@ -1,4 +1,4 @@
-name: Generate post from issue
+name: Generate blog post from Issue
 
 on:
   issues:
@@ -10,37 +10,35 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate HTML file
+      - name: Extract and create post HTML
+        id: build
         run: |
-          ISSUE_TITLE="${{ github.event.issue.title }}"
-          ISSUE_BODY="${{ github.event.issue.body }}"
-          
-          POST_TITLE=$(echo "$ISSUE_BODY" | sed -n 's/^title: //p')
-          POST_DATE=$(echo "$ISSUE_BODY" | sed -n 's/^date: //p')
-          POST_CONTENT=$(echo "$ISSUE_BODY" | sed -n '/^---$/,/^---$/!p' | sed '1,2d')
-
+          mkdir -p posts
+          TITLE="${{ github.event.issue.title }}"
+          BODY="${{ github.event.issue.body }}"
+          DATE=$(echo "$BODY" | sed -n 's/^date: //p')
+          CONTENT=$(echo "$BODY" | sed -n '/^---$/,/^---$/!p' | sed '1,2d')
           FILENAME="post$(date +%s).html"
 
-          cat <<EOF > $FILENAME
+          cat <<EOF > posts/$FILENAME
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>$POST_TITLE</title>
+  <title>$TITLE</title>
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <div class="container">
     <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ $POST_TITLE</a></h2>
-      <p class="meta">$POST_DATE</p>
-      <div class="article-body">${POST_CONTENT//$'\n'/<br>}</div>
+      <h2 class="title"><a class="neon" href="#">＞＞ $TITLE</a></h2>
+      <p class="meta">$DATE</p>
+      <div class="article-body">${CONTENT//$'\n'/<br>}</div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
   </div>
@@ -48,12 +46,25 @@ jobs:
 </html>
 EOF
 
-          echo "✅ Created $FILENAME"
+          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
 
-      - name: Commit post
+      - name: Commit new post
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add post*.html
-          git commit -m "Add blog post from issue"
+          git add posts/*.html
+          git commit -m "Add blog post"
+          git push
+
+      - name: Re-generate index
+        run: |
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Index</title><link rel='stylesheet' href='style.css'></head><body><h1>記事一覧</h1><ul>" > index.html
+          for f in $(ls posts/*.html | sort -r); do
+            title=$(grep -oP '(?<=<title>).*?(?=</title>)' "$f")
+            echo "<li><a href=\"$f\">$title</a></li>" >> index.html
+          done
+          echo "</ul></body></html>" >> index.html
+
+          git add index.html
+          git commit -m "Update index"
           git push
