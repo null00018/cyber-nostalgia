@@ -20,23 +20,42 @@
 </head>
 <body>
   <h1>ブログ投稿</h1>
-  <form id="issueForm" target="_blank" action="https://github.com/null00018/cyber-nostalgia/issues/new" method="GET">
+  <form id="issueForm">
     <label>タイトル</label>
-    <input type="text" name="title" id="title" required>
+    <input type="text" id="title" required>
+
+    <label>日付（例: 20250701、空なら今日）</label>
+    <input type="text" id="date" placeholder="例: 20250701">
 
     <label>本文</label>
-    <textarea name="body" id="body" rows="10" required>
----
-date: 20250622
----
-
-ここに本文を書いてください。
-
-例：
-90年代のネオン街に溶けるような、夜のポスト。
-    </textarea>
+    <textarea id="body" rows="10" required></textarea>
 
     <button type="submit">GitHubで投稿</button>
   </form>
+
+  <script>
+    document.getElementById("issueForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value.trim();
+      const dateInput = document.getElementById("date").value.trim();
+      const bodyInput = document.getElementById("body").value.trim();
+
+      // 今日の日付（YYYYMMDD形式）
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const date = /^\d{8}$/.test(dateInput) ? dateInput : today;
+
+      // Issue body フォーマット生成
+      const issueBody =
+`---\ndate: ${date}\n---\n\n${bodyInput}`;
+
+      // GitHub Issue作成URLに飛ばす（GETパラメータで渡す）
+      const url = new URL("https://github.com/null00018/cyber-nostalgia/issues/new");
+      url.searchParams.set("title", title);
+      url.searchParams.set("body", issueBody);
+
+      window.open(url.toString(), '_blank');
+    });
+  </script>
 </body>
 </html>
