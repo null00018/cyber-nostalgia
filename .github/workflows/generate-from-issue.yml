@@ -20,10 +20,12 @@ jobs:
       - name: Install dependencies
         run: npm install js-yaml
 
-      - name: Generate post from issue
+      - name: Save issue payload
         run: |
           echo '${{ toJSON(github.event.issue) }}' > issue.json
-          node generate-from-issue.js
+
+      - name: Generate post from issue
+        run: node generate-from-issue.js
 
       - name: Commit post
         run: |
@@ -32,3 +34,12 @@ jobs:
           git add post*.html
           git commit -m "Generate post from issue #${{ github.event.issue.number }}" || echo "No changes"
           git push
+
+      # ▼ index.html を更新する workflow を明示的に起動する
+      - name: Trigger generate-index workflow
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          workflow: generate-index.yml
+          ref: main
