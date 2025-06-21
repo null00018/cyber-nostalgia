@@ -34,12 +34,3 @@ jobs:
           git add post*.html
           git commit -m "Generate post from issue #${{ github.event.issue.number }}" || echo "No changes"
           git push
-
-      # ▼ index.html を更新する workflow を明示的に起動する
-      - name: Trigger generate-index workflow
-        uses: peter-evans/workflow-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          workflow: generate-index.yml
-          ref: main
