@@ -6,7 +6,7 @@ const title = issue.title || 'Untitled';
 const body = issue.body || '';
 
 // フロントマター抽出
-const match = body.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+const match = body.match(/^-{3,}\s*\n([\s\S]*?)\n-{3,}\s*\n([\s\S]*)$/m);
 if (!match) {
   console.error("⛔ フロントマターが見つかりません。形式: ---\\ndate: YYYYMMDD\\n---");
   process.exit(1);
