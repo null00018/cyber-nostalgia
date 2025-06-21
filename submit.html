@@ -36,7 +36,7 @@
   <p id="status"></p>
 
   <script>
-    const GITHUB_TOKEN = "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"; // ← ご自身のトークンに置き換えてください
+    const GITHUB_TOKEN = "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"; // ← ご自身のトークンに置き換えてください
     const REPO = "null00018/cyber-nostalgia";
     const BRANCH = "main";
 
@@ -76,7 +76,7 @@
       const res = await fetch(`https://api.github.com/repos/${REPO}/contents/posts/${filename}`, {
         method: "PUT",
         headers: {
-          "Authorization": "token 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",
+          "Authorization": "token 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", // ← ご自身のトークンに置き換えてください
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
