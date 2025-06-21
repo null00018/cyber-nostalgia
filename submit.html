@@ -1,3 +1,4 @@
+<!-- ✅ submit.html（フォーム画面） -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -32,63 +33,35 @@
 
     <button type="submit">投稿する</button>
   </form>
-
   <p id="status"></p>
-
   <script>
-    const GITHUB_TOKEN = "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"; // ← ご自身のトークンに置き換えてください
+    const GITHUB_TOKEN = "ghp_xxx_REPLACE_ME"; // classic token with "repo" scope
     const REPO = "null00018/cyber-nostalgia";
-    const BRANCH = "main";
 
     document.getElementById("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const title = document.getElementById("title").value.trim();
+      const title = document.getElementById("title").value;
       const dateInput = document.getElementById("date").value.trim();
       const date = dateInput || new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      const body = document.getElementById("body").value.trim();
+      const body = document.getElementById("body").value;
 
-      const htmlContent = `
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>${title}</title>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <div class="container">
-    <article>
-      <h2 class="title"><a class="neon" href="#">＞＞ ${title}</a></h2>
-      <p class="meta">${date}</p>
-      <div class="article-body">${body.replace(/\n/g, "<br>")}</div>
-      <p class="neon"><a href="index.html">←START</a></p>
-    </article>
-  </div>
-</body>
-</html>`.trim();
+      const issueBody = `---\ntitle: ${title}\ndate: ${date}\n---\n\n${body}`;
 
-      const filename = `post${Date.now()}.html`;
-      const encodedContent = btoa(unescape(encodeURIComponent(htmlContent)));
-
-      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/posts/${filename}`, {
-        method: "PUT",
+      const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
+        method: "POST",
         headers: {
-          "Authorization": "token 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", // ← ご自身のトークンに置き換えてください
-          "Content-Type": "application/json"
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json"
         },
         body: JSON.stringify({
-          message: `Add ${filename}`,
-          content: encodedContent,
-          branch: BRANCH
+          title: title,
+          body: issueBody
         })
       });
 
       const status = document.getElementById("status");
       if (res.ok) {
-        status.textContent = `✅ 投稿完了 → ${filename}`;
+        status.textContent = "✅ 投稿を受け付けました！反映までお待ちください。";
         document.getElementById("postForm").reset();
       } else {
         const err = await res.json();
@@ -98,3 +71,77 @@
   </script>
 </body>
 </html>
+
+
+# ✅ .github/workflows/post.yml（自動でHTMLとindexを生成）
+
+name: Generate blog post from Issue
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract and create post HTML
+        id: build
+        run: |
+          mkdir -p posts
+          TITLE="${{ github.event.issue.title }}"
+          BODY="${{ github.event.issue.body }}"
+          DATE=$(echo "$BODY" | sed -n 's/^date: //p')
+          CONTENT=$(echo "$BODY" | sed -n '/^---$/,/^---$/!p' | sed '1,2d')
+          FILENAME="post$(date +%s).html"
+
+          cat <<EOF > posts/$FILENAME
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>$TITLE</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ $TITLE</a></h2>
+      <p class="meta">$DATE</p>
+      <div class="article-body">${CONTENT//$'\n'/<br>}</div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+</body>
+</html>
+EOF
+
+          echo "filename=$FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Commit new post
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add posts/*.html
+          git commit -m "Add blog post"
+          git push
+
+      - name: Re-generate index
+        run: |
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Index</title><link rel='stylesheet' href='style.css'></head><body><h1>記事一覧</h1><ul>" > index.html
+          for f in $(ls posts/*.html | sort -r); do
+            title=$(grep -oP '(?<=<title>).*?(?=</title>)' "$f")
+            echo "<li><a href=\"$f\">$title</a></li>" >> index.html
+          done
+          echo "</ul></body></html>" >> index.html
+
+          git add index.html
+          git commit -m "Update index"
+          git push
