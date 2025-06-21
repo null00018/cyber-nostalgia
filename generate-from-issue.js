@@ -8,7 +8,7 @@ const body = issue.body || '';
 // フロントマター抽出
 const match = body.match(/^-{3,}\s*\n([\s\S]*?)\n-{3,}\s*\n([\s\S]*)$/m);
 if (!match) {
-  console.error("⛔ フロントマターが見つかりません。形式: ---\\ndate: YYYYMMDD\\n---");
+  console.error("\u274c フロントマターが見つかりません。形式: ---\\ndate: YYYYMMDD\\n---\n本文");
   process.exit(1);
 }
 
@@ -29,7 +29,7 @@ const html = `<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Loading...</title>
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,12 +40,17 @@ const html = `<!DOCTYPE html>
       <h2 class="title"><a class="neon" href="#">＞＞ #${postNumber} ${title}</a></h2>
       <p class="meta">${date}</p>
       <div class="article-body">
-${content.replace(/\n/g, '<br>')}
+${content.replace(/\n/g, '\n        <br>')}
       </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
   </div>
+
   <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       const heading = document.querySelector("h2.title");
       if (heading) {
