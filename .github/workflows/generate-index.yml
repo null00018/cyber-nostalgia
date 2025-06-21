@@ -1,8 +1,11 @@
-name: Generate Post from Issue
+name: Generate Index
 
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:  # ← 明示的な呼び出しにも対応
+  push:
+    paths:
+      - 'post*.html'
+      - 'generate-index.js'
 
 jobs:
   build:
@@ -18,28 +21,15 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install js-yaml
+        run: npm install jsdom
 
-      - name: Save issue payload
-        run: |
-          echo '${{ toJSON(github.event.issue) }}' > issue.json
+      - name: Run generate-index.js
+        run: node generate-index.js
 
-      - name: Generate post from issue
-        run: node generate-from-issue.js
-
-      - name: Commit post
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add post*.html
-          git commit -m "Generate post from issue #${{ github.event.issue.number }}" || echo "No changes"
+          git add index.html
+          git commit -m "Auto-update index.html" || echo "No changes"
           git push
-
-      # ▼ index.html を更新する workflow を明示的に起動する
-      - name: Trigger generate-index workflow
-        uses: peter-evans/workflow-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          workflow: generate-index.yml
-          ref: main
