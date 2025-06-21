@@ -1,16 +1,22 @@
 const fs = require('fs');
-const path = require('path');
+const yaml = require('js-yaml');
 
-// --- ペイロード読み込み ---
-const payload = JSON.parse(fs.readFileSync('payload.json', 'utf8'));
+const issue = JSON.parse(fs.readFileSync('issue.json', 'utf8'));
+const title = issue.title || 'Untitled';
+const body = issue.body || '';
 
-const { title, date, body } = payload;
-if (!title || !date || !body) {
-  console.error("⛔ title, date, body がすべて必要です");
+// フロントマター抽出
+const match = body.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+if (!match) {
+  console.error("⛔ フロントマターが見つかりません。形式: ---\\ndate: YYYYMMDD\\n---");
   process.exit(1);
 }
 
-// --- 次の post 番号を取得 ---
+const metadata = yaml.load(match[1]);
+const content = match[2].trim();
+const date = metadata.date || new Date().toISOString().slice(0,10).replace(/-/g, '');
+
+// 次のポスト番号
 const files = fs.readdirSync('.');
 const postFiles = files.filter(f => /^post\d+\.html$/.test(f));
 const nextIndex = postFiles
@@ -18,7 +24,7 @@ const nextIndex = postFiles
   .reduce((max, num) => Math.max(max, num), 0) + 1;
 const postNumber = String(nextIndex).padStart(2, '0');
 
-// --- HTML生成 ---
+// HTML生成
 const html = `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -34,7 +40,7 @@ const html = `<!DOCTYPE html>
       <h2 class="title"><a class="neon" href="#">＞＞ #${postNumber} ${title}</a></h2>
       <p class="meta">${date}</p>
       <div class="article-body">
-${body.replace(/\n/g, '\n<br>')}
+${content.replace(/\n/g, '<br>')}
       </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
@@ -51,7 +57,5 @@ ${body.replace(/\n/g, '\n<br>')}
 </body>
 </html>`;
 
-// --- ファイル保存 ---
-const filename = `post${nextIndex}.html`;
-fs.writeFileSync(filename, html);
-console.log(`✅ Generated ${filename}`);
+fs.writeFileSync(`post${nextIndex}.html`, html);
+console.log(`✅ post${nextIndex}.html を生成しました`);
