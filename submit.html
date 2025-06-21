@@ -33,29 +33,32 @@
     <button type="submit">投稿する</button>
   </form>
   <p id="status"></p>
+
   <script>
-    const GITHUB_TOKEN = "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"; // classic token with "repo" scope
-    const REPO = "null00018/cyber-nostalgia";
+    const ENDPOINT = "https://api.github.com/repos/null00018/cyber-nostalgia/dispatches";
 
     document.getElementById("postForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const title = document.getElementById("title").value;
+      const title = document.getElementById("title").value.trim();
       const dateInput = document.getElementById("date").value.trim();
       const date = dateInput || new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      const body = document.getElementById("body").value;
+      const body = document.getElementById("body").value.trim();
 
-      const issueBody = `---\ntitle: ${title}\ndate: ${date}\n---\n\n${body}`;
+      const payload = {
+        event_type: "new_blog_post", // GitHub Actionsでハンドルするイベント名
+        client_payload: {
+          title,
+          date,
+          body
+        }
+      };
 
-      const res = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
+      const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: {
-          Authorization: `token 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`,
-          Accept: "application/vnd.github+json"
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          title: title,
-          body: issueBody
-        })
+        body: JSON.stringify(payload)
       });
 
       const status = document.getElementById("status");
@@ -64,7 +67,7 @@
         document.getElementById("postForm").reset();
       } else {
         const err = await res.json();
-        status.textContent = `❌ エラー: ${err.message}`;
+        status.textContent = `❌ エラー: ${err.message || '送信失敗'}`;
       }
     });
   </script>
