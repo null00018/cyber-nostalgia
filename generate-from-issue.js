@@ -40,7 +40,7 @@ const html = `<!DOCTYPE html>
       <h2 class="title"><a class="neon" href="#">＞＞ #${postNumber} ${title}</a></h2>
       <p class="meta">${date}</p>
         <div class="article-body">
-        ${content}
+${content}
         </div>
       <p class="neon"><a href="index.html">←START</a></p>
     </article>
