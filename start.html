@@ -30,31 +30,51 @@
       border-radius: 4px;
       box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
     }
+    code {
+      background: #111;
+      padding: 0.1em 0.3em;
+      border-radius: 3px;
+    }
+    ol {
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
   <h1>📡 ブログテンプレートをはじめよう</h1>
 
-  <p>このページでは、あなた自身のブログを1クリックで始める方法を紹介します。</p>
+  <p>このページでは、あなた自身のブログを GitHub 上だけで作り、記事投稿もワンクリックでできる方法を紹介します。</p>
 
-  <h2>ステップ 1: GitHub アカウントを作成</h2>
-  <p><a href="https://github.com/signup" target="_blank">GitHubに登録</a>しておきましょう（無料）。</p>
-
-  <h2>ステップ 2: テンプレートをコピー</h2>
-  <p>下のボタンを押すと、このブログテンプレートを自分のGitHubにコピーできます。</p>
-
-  <a class="button" href="https://github.com/null00018/cyber-nostalgia/generate" target="_blank">🚀 Use This Template</a>
-
-  <h2>ステップ 3: GitHub Pagesを有効に</h2>
+  <h2>🛠 ステップ 1: GitHub アカウントを作成</h2>
   <ol>
-    <li>コピーされたリポジトリに移動</li>
-    <li>[Settings] → [Pages] を選択</li>
-    <li>"Branch: main / (root)" を選んで保存</li>
+    <li><a href="https://github.com/signup" target="_blank">GitHub サインアップページ</a>にアクセス</li>
+    <li>ユーザー名・メールアドレス・パスワードを入力</li>
+    <li>ロボットではないことを確認し、[Create Account] をクリック</li>
+    <li>無料プラン（Free）を選んで次へ</li>
   </ol>
-  <p>数十秒後に、あなたのブログが公開されます。</p>
 
-  <h2>ステップ 4: 投稿してみよう</h2>
-  <p>URLの末尾に <code>/submit.html</code> を付けてアクセス → 投稿フォームが使えます。</p>
+  <h2>📦 ステップ 2: テンプレートをコピー</h2>
+  <p>下のボタンからこのテンプレートを自分のアカウントにコピー（＝リポジトリを作成）します。</p>
+  <a class="button" href="https://github.com/null00018/cyber-nostalgia/generate" target="_blank">🚀 Use This Template</a>
+  <p>※「リポジトリ」とはブログの中身を保存するフォルダのようなものです。</p>
+
+  <h2>🌍 ステップ 3: GitHub Pages を有効に</h2>
+  <ol>
+    <li>作成した自分のリポジトリにアクセス</li>
+    <li>右上の「Settings」 → 左側の「Pages」へ</li>
+    <li>"Branch: main / (root)" を選んで「Save」</li>
+  </ol>
+  <p>約30秒〜1分後に、あなた専用のブログが公開されます。</p>
+
+  <h2>✍️ ステップ 4: 投稿してみよう</h2>
+  <ol>
+    <li>あなたのブログURLの末尾に <code>/submit.html</code> を追加（例：<code>https://yourname.github.io/myblog/submit.html</code>）</li>
+    <li>投稿フォームにタイトル・本文を入力</li>
+    <li>日付は未入力でもOK（自動で今日に）</li>
+    <li>「投稿する」をクリック → 数秒後に自動で記事生成</li>
+    <li>トップページ（index.html）が自動更新され、新着記事に反映！</li>
+  </ol>
+  <p>💡 投稿は GitHub Issue を使って処理されるため、完全ノーコードで運用できます。</p>
 
   <hr>
   <p><a href="index.html">← BACK TO TOP</a></p>
