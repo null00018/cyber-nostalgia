@@ -76,8 +76,17 @@
     <li><strong>Save</strong> ボタンを忘れずにクリック</li>
   </ol>
   <p>この設定をしないと、ブログは公開されません。</p>
+  
+  <h2>🔐 ステップ 4: GitHub Actions の書き込み権限を設定</h2>
+  <ol>
+    <li><strong>Settings</strong> → 左側メニューの <strong>Actions</strong> → <strong>General</strong> を開く</li>
+    <li>下の方にある <strong>Workflow permissions</strong> の項目で、<br>
+      <strong>「Read and write permissions」</strong> を選択</li>
+    <li><strong>Save</strong> をクリック</li>
+  </ol>
+  <p>この設定を行わないと、投稿しても記事ファイル（<code>postX.html</code>）が作成されません。</p>
 
-  <h2>✍️ ステップ 4: 投稿ページを設定</h2>
+  <h2>✍️ ステップ 5: 投稿ページを設定</h2>
   <ol>
     <li><code>submit.html</code> を Code のタブから開き、以下の部分を依須の情報に書き換え：
 <pre><code>const username = "YOUR_GITHUB_USERNAME";
