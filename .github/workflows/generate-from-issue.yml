@@ -32,10 +32,10 @@ jobs:
           git commit -m "Add new post" || echo "No changes"
           git push
 
-      - name: Init npm & install jsdom
+      - name: Init npm & install dependencies
         run: |
           npm init -y
-          npm install jsdom
+          npm install jsdom js-yaml
 
       - name: Run generate-index.js
         run: node generate-index.js
