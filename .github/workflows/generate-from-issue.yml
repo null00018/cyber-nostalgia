@@ -17,9 +17,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install js-yaml
-
       - name: Save issue payload
         run: |
           echo '${{ toJSON(github.event.issue) }}' > issue.json
@@ -32,8 +29,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add post*.html
-          git commit -m "Generate post from issue #${{ github.event.issue.number }}" || echo "No changes"
+          git commit -m "Add new post" || echo "No changes"
           git push
+
+      - name: Init npm & install jsdom
+        run: |
+          npm init -y
+          npm install jsdom
 
       - name: Run generate-index.js
         run: node generate-index.js
@@ -43,5 +45,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Update index.html after post creation" || echo "No changes"
+          git commit -m "Auto-update index.html" || echo "No changes"
           git push
