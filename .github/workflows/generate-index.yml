@@ -1,7 +1,7 @@
 name: Generate Index
 
 on:
-  workflow_dispatch:  # ← 明示的な呼び出しにも対応
+  workflow_dispatch:
   push:
     paths:
       - 'post*.html'
@@ -20,8 +20,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install jsdom
+      - name: Init npm & install jsdom
+        run: |
+          npm init -y
+          npm install jsdom
 
       - name: Run generate-index.js
         run: node generate-index.js
