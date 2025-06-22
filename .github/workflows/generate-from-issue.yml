@@ -17,6 +17,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Init npm & install dependencies
+        run: |
+          npm init -y
+          npm install jsdom js-yaml
+
       - name: Save issue payload
         run: |
           echo '${{ toJSON(github.event.issue) }}' > issue.json
