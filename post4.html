@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #04 グリーンカレー風</a></h2>
+      <p class="meta">20250628</p>
+        <div class="article-body">
+以下は本日の献立のレシピです。
+味はそこそこでしたが、適当ですのでご承知おきください。
+
+・お米：炊いておく
+・玉ねぎ 1個
+・ナス 3本
+・エリンギ 2本
+・鶏肉 200g
+・パクチー 適量
+
+・蜂カレーのルー 適量
+・ココナツミルク 200ccくらい（スーパーで売ってる）
+
+A　グリーンペースト的なもの
+・万願寺とうがらし 4本くらい
+　（ピーマンとか青くて苦味のあるお好みのでよい）
+・ミックスナッツ 80g：少し砕いておく
+・油 適量
+・上記のパクチーの根の部分
+
+①まず、Aをペースト状にします。ミキサー的なので。上記でやるとうまく混ざらなかったので、先に少しココナツミルクを混ぜてみてもいいかも知りません。
+
+②ぶつ切りにした鶏肉を油を引いた鍋で熱して色が変わったら出しておく。
+
+③玉ねぎをうすくスライスするか、みじん切りにして、油を足した同じ鍋で炒める。塩とクミンくらい入れる。飴色になるまでやるといいかもしれません。
+
+④ナスとエリンギも一緒に炒める。
+
+⑤鶏肉を戻して、浸るくらい水を入れて煮込む。
+
+⑥ナスが柔らかくなったらルーとペーストを入れて適当に弱火で煮込む。
+
+⑦塩胡椒で味を整える。
+
+⑧米をお皿に盛る。ルーをかける。パクチーの葉のところうえからふりかける。
+
+完成
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
