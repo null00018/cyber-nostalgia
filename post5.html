@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #05 偶然の音楽</a></h2>
+      <p class="meta">20250629</p>
+        <div class="article-body">
+ポール・オースター著。1990年。
+※ネタバレは含みますがそれでつまんなくなるようなことは避けてるつもりです。
+
+主人公のジム・ナッシュの妻は既に出ていった後であり、2歳の娘は姉に預けている。自分たちを捨てた父親の遺産が転がり込んできたことをきっかけに仕事を辞め、自分はひたすら車でさまよう生活から抜け出せなくなっている。
+
+途中、登場人物二人が巨大な壁を築くことを強いられるのだが、オースターがこの話を書き上げた日は、ちょうどベルリンの壁が崩壊した日だったそうだ。
+
+そんな昔の本を読んだのは、2024年に亡くなったポール・オースターの追悼特集をMONKEYで読んで、遺作となる『バウムガートナー』の抄訳がめちゃくちゃ良くて、なんか読みたいなと思ってたまたま手元にあったのがそれだったからです。
+
+MONKEYの責任編集である柴田元幸は、ポール・オースターの日本での翻訳者／紹介者ということもあって、特集もよかった。
+
+柴田元幸は私の読書遍歴にとって5本指に入るくらい重要な人物で、村上春樹との対談本『翻訳夜話2+サリンジャー戦記』を読んだあたりから、「あ、本って人が書いてるんだ」という当たり前に気づいて、いろいろ面白さがわかってきたというきっかけに..
+
+なので、ポール・オースターはずっと気になりつつも、いかんせん作品も多いので(そもそもオースターに限らず柴田訳が多すぎる、ありがたい話大抵面白い)放置していて、けどバウムガートナーが出るのめちゃくちゃ楽しみなのでいくつか読んでおきたいなと思っているのです。
+
+さて、タイトルの話にもどると、主人公の思考は一種の破滅型なのですが、あーわかるなーという感じ。
+
+物語の序盤、いくつかリスクある決断をするのですが、根拠があるわけでなく、むしろリスクそれ自体が根拠になっている有様です。
+
+でも、自らの意思ではもはやどうしようもない人生の流れみたいなものに、なにかしらの区切りがつく方向にベットしてやろう、それが破滅でもまあいいや、っていうのは、そういう風にしか選べないときあるよねみたいな気持ちになりました。
+
+最終的に彼は自分の人生のハンドルを再度握り直すわけですが、、、
+
+最近小説をあまり読んでなかったので、最初の低調さに飽きそうだったけど、気がついたらこの奇妙な話に引き込まれていて、単なる言葉よりもずっと強度があって物語はやっぱいいな、と思いました。
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
