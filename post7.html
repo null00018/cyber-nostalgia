@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #07 謎ルール試論</a></h2>
+      <p class="meta">20250926</p>
+        <div class="article-body">
+さっき、いつもの定食屋にいったら、珍しく中学生くらいの部活帰りらしき女子４人がいた。
+
+そもそも路地奥のテーブルが３つくらいで、私がいくときは１〜２人とすれ違うくらいのお店で、中学生がふらりと入るような店ではないのだ。
+
+その４人の雰囲気がなんというか良くて、そのおかげで朗らかな気持ちになり、「この感じ久々にみたなー」と思ったのでそのことを日記に書きたくなった。
+
+まあ言ってしまえば素直そうで中学生らしい良い感じということなのだけれど、もう少しなんだろうと考えてみると、「きゃっきゃしてるのになんか自分たちを律してる感じ」なのではないかとおもった。別に普通で大丈夫なのに、ちょっとひそひそ声で授業中に話しているみたいな、社会や大人たちの世界では、自分たちがなにか謎のルールを守らなければいけないと素朴に信じているような。
+
+けど、その謎の信念はきっと正しいのだと思った。大人になったり社会に出たりするということには、そうした意味のない規範や謎のしきたり（シャツを出していいのは２年生部員からとか）が、意味のないことなのだと知るという側面があると思う。でもあの感じを見て、そうした謎のしきたりはやっぱり意味があるのではないかと不意に思ったのだ。
+
+こうしたものがないということは、誰もがどのような場であっても、（合理的なルールや法律の範囲であれば）堂々と、好き勝手に振る舞っていいということだ。それは実際にはその通りだけれど、なんというか謎のしきたりやルールがある世界でふるまうことの演技性や、その鑑賞にかかる微笑ましさのようなものがあるのではないだろうか。
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
