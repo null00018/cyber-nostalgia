@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #08 青い車</a></h2>
+      <p class="meta">20251110</p>
+        <div class="article-body">
+この漫画を読むと、自分が生まれた頃の空気ってこんな感じだったんだろうなと、半分は羨望として、思う。95年、阪神淡路大震災から2ヶ月後。
+
+どことなく退廃的で切ない感じがする。登場人物はみんなフラフラしていて、どこかイラついているように見える。
+
+切ないのは多分、みんなちゃんとした大人にならなきゃいけないことを心の奥ではわかっているからだろう。それは、スーツに身を固め、結婚し..すなわち責任を引き受けることを意味する。
+
+前時代的だよなと思うと同時に、ちゃんとすることにまだ意味があった時代だったんだなと思う。ちゃんとした大人がいるからこそ、悪びれやドロップアウトが機能する。
+
+音楽や漫画といったものが大人たちからの逃げ場になり得る。けれども誰もが自分らしく生きなければならない現在においてはそのような逃げ場は機能しない。
+
+ちゃんとした大人なんてフィクションだぜ、と言われるかとしれない。それはそうかもしれない。だけどそれを言うなら自分らしさだって十分フィクションだろう。
+
+フィクションは単なる嘘ではない。そうかもしれない、そうあってほしいということをギリギリまで現実に引き寄せてそこに責任を持つことだろう。それを手放してしまえば、社会の底は抜けてしまう。
+
+タイムレスな作品を書こうと思ったら、かえって当時の空気を残した作品として評価されたというのは、復刻版に寄せた作者の言だが、これを敷衍すれば、普遍的なことを言おうとするほどに、固有性が宿るということになる。
+
+であるなら、逆説的に自分の役割を引き受けようとするものだけが、自分らしさを獲得できるということにならないか。
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
