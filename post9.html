@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #09 洗濯物</a></h2>
+      <p class="meta">20251205</p>
+        <div class="article-body">
+朝洗濯してハンガーにかけた服をベランダに干しておくと、帰ってきたときに大体服同士が寄っている。
+
+乾きやすいように均等にしておいても。
+
+なぜ服は寄るのか。
+
+もちろん風だろう。けどそんなに風が強くない日でもなる。
+
+服を寄せるような風がほんの少ししかなくても、服を離す風は基本的に起きないので、服はどんどん寄る。
+
+まあそういうことです。
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
