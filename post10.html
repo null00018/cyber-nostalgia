@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title> <!-- 仮のタイトル（自動で上書きされる） -->
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="container">
+    <article>
+      <h2 class="title"><a class="neon" href="#">＞＞ #10 プレイグラウンド</a></h2>
+      <p class="meta">20251207</p>
+        <div class="article-body">
+“有限のゲームをプレイするのは勝利という目的のためで、無限のゲームの目的はプレイを続けることにある”
+
+“もはや詳細な紹介は必要ないだろう。二〇〇六年（邦訳二〇一三年）に発表した「エコー・メイカー」で全米図書賞、二〇一八年刊行（邦訳二〇一九年）の『オーバーストーリー』でピュリッツァー賞を受賞、前作『惑う星」（二〇二一年、邦訳二〇二二年）もブッカー賞最終候補となった、アメリカ文学の大御所だ。地球上で人間だけは特別な存在であるという見方に揺さぶりをかけ、環境的観点を明確にした『オーバーストーリー』以降、彼の文明観は特に広く注目を集めている。”
+『プレイグラウンド』リチャード・パワーズ（木原善彦・訳／新潮社）　訳者あとがきより
+
+全部を読んだわけではなけど、パワーズの小説の根底には環境とテクノロジーというテーマがあって、自然に対する畏怖のような感情と、それとは全然関係しないように思われる科学的事実とが思いもよらない形で結びつく。というか、本当にその分野のことならなんでも知っているような専門家を書けるのって本当すごくないですか。帯の作者紹介によれば、大学では物理学から文学へと転向し、プログラマの経歴を持つのでそのこととも関係しているのかもしれない。1957年イリノイ州エヴァンストン生まれ。
+
+自分が読んだ『エコーメイカー』や『惑う星』の細かいオチは正直思い出せないのだけれど、おもしろかったという印象と、大きな自然のなかで一人の人間が静謐で緊張した空気のなかで、自分が別物になってしまうようななにかを受け取るシーンが映像的なイメージはしっかりと残っている。今回もそうした美しい描写は健在で、海の中の見たこともない生物やイナのつくる彫刻の極彩色のイメージは強烈に残り続けるでしょう。
+
+ネタバレになるのであまり書けませんが、ストーリーもちゃんと泣けます。２人の若者がひたすら囲碁に勤しむ姿や、恋心を利用されてることをわかりつつ車を飛ばす男のどうしようもなさは、見ているだけでグッときます。ままならないことをいかに自分の人生にするか、そしてそれをものにできなかったときの悲しみはいかにして贖えるのか。物語の「ひねり」によって最後はやや一瞬置いていかれるかもしれませんが、その両方を味わうことができるでしょう。
+        </div>
+      <p class="neon"><a href="index.html">←START</a></p>
+    </article>
+  </div>
+
+  <script>
+    function confirmExit() {
+      alert("ログアウト中... 電脳空間から切断します。");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const heading = document.querySelector("h2.title");
+      if (heading) {
+        const cleanTitle = heading.textContent.replace(/^＞＞\s*/, '').trim();
+        document.title = cleanTitle;
+      }
+    });
+  </script>
+</body>
+</html>
